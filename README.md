@@ -34,6 +34,8 @@ npm i
 
 # Step 4: Start the development server with auto-reloading and an instant preview.
 npm run dev
+
+# Note: For full functionality (including database), use Docker Compose instead
 ```
 
 **Edit a file directly in GitHub**
@@ -54,11 +56,28 @@ npm run dev
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Frontend**: Vite, TypeScript, React, shadcn-ui, Tailwind CSS
+- **Backend**: Express.js, TypeScript, PostgreSQL
+- **Infrastructure**: Docker, Docker Compose
+
+## Quick Start with Docker
+
+The easiest way to run MovWise is using Docker Compose:
+
+```bash
+# Start all services (frontend, backend, database)
+./docker-start.sh
+
+# Or manually:
+docker-compose up -d --build
+```
+
+This will start:
+- **Frontend** at http://localhost:8080
+- **Backend API** at http://localhost:3001
+- **PostgreSQL Database** on port 5432
+
+For detailed Docker instructions, see [README.DOCKER.md](./README.DOCKER.md)
 
 ## How can I deploy this project?
 

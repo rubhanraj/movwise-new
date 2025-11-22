@@ -25,6 +25,7 @@ interface FormData {
   childDependents: string;
   
   // Contact
+  fullName: string;
   email: string;
   phone: string;
 }
@@ -53,6 +54,7 @@ const Estimator = () => {
     mainApplicantIllegalEntry: "no",
     adultDependents: "0",
     childDependents: "0",
+    fullName: "",
     email: "",
     phone: ""
   });
@@ -176,7 +178,7 @@ const Estimator = () => {
     return phoneRegex.test(phone);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateEmail(formData.email)) {
@@ -189,8 +191,71 @@ const Estimator = () => {
       return;
     }
 
-    setShowResults(true);
-    toast.success("Results calculated! Thank you for using MovWise.");
+    if (!formData.fullName.trim()) {
+      toast.error("Please enter your full name");
+      return;
+    }
+
+    // Calculate score first
+    const scoreResult = calculateScore();
+
+    // Prepare data for API
+    const submissionData = {
+      fullName: formData.fullName,
+      email: formData.email,
+      phone: formData.phone,
+      salary: parseFloat(formData.mainApplicantSalary) || undefined,
+      mortgage: formData.mainApplicantMortgage || undefined,
+      innovatorVisa: false, // Add checkbox if needed
+      yearsResidence: parseFloat(formData.mainApplicantResidenceYears) || undefined,
+      englishLevel: formData.mainApplicantEnglishLevel || undefined,
+      volunteeringHours: parseFloat(formData.mainApplicantVolunteeringHours) || undefined,
+      publicService: formData.mainApplicantPublicService || undefined,
+      lifeInUKPassed: true, // Add checkbox if needed
+      benefitsUse: formData.mainApplicantBenefitsUse || undefined,
+      criminality: formData.mainApplicantCriminality || undefined,
+      illegalEntry: formData.mainApplicantIllegalEntry || undefined,
+      previousBreaches: false, // Add checkbox if needed
+      adultDependents: parseInt(formData.adultDependents) || 0,
+      childDependents: parseInt(formData.childDependents) || 0,
+      contributionScore: scoreResult.contribution,
+      residenceScore: scoreResult.residence,
+      integrationScore: scoreResult.integration,
+      characterScore: scoreResult.character,
+      totalScore: scoreResult.total,
+      eligibleFor3YearPathway: scoreResult.eligibleFor3YearPathway,
+      estimatedYearsToILR: scoreResult.estimatedYearsToILR,
+      newsletter: true,
+      volunteeringInterest: false,
+    };
+
+    try {
+      // Submit to backend API
+      // In development, use proxy from vite.config.ts, otherwise use env variable or default
+      const apiUrl = import.meta.env.PROD 
+        ? (import.meta.env.VITE_API_URL || 'http://localhost:3001')
+        : ''; // Empty string uses relative path, which will use Vite proxy in dev
+      const response = await fetch(`${apiUrl}/api/ilr/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submissionData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to save submission');
+      }
+
+      const result = await response.json();
+      setShowResults(true);
+      toast.success("Thank you for using MovWise.");
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Still show results even if save fails
+      setShowResults(true);
+      toast.warning("Results calculated, but failed to save. Results are still displayed.");
+    }
   };
 
   const scoreResult = showResults ? calculateScore() : null;
@@ -454,6 +519,19 @@ const Estimator = () => {
             </div>
             
             <div className="space-y-4">
+              <div>
+                <Label htmlFor="fullName" className="text-foreground">Full Name</Label>
+                <Input
+                  id="fullName"
+                  type="text"
+                  placeholder="Your full name"
+                  value={formData.fullName}
+                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  required
+                  className="bg-background"
+                />
+              </div>
+
               <div>
                 <Label htmlFor="email" className="text-foreground">Email Address</Label>
                 <Input

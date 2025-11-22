@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MovWise | Your UK Settlement Partner</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Custom fonts */
+        @font-face {
+            font-family: 'Big Caslon FB';
+            src: url('https://fonts.cdnfonts.com/css/big-caslon-fb');
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Big Caslon FB', serif;
+        }
+        
+        /* Custom colors */
+        .bg-movwise-green {
+            background-color: #4A7C59;
+        }
+        
+        .text-movwise-green {
+            color: #4A7C59;
+        }
+        
+        .border-movwise-green {
+            border-color: #4A7C59;
+        }
+        
+        .bg-movwise-yellow {
+            background-color: #F4C430;
+        }
+        
+        .text-movwise-yellow {
+            color: #F4C430;
+        }
+        
+        .text-movwise-gray {
+            color: #B0B0B0;
+        }
+        
+        .border-movwise-gray {
+            border-color: #B0B0B0;
+        }
+        
+        /* Custom animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Custom checkbox styling */
+        input[type="checkbox"] {
+            accent-color: #4A7C59;
+        }
+        
+        /* Custom input styling */
+        input[type="number"], input[type="email"], input[type="tel"], input[type="text"] {
+            border: 1px solid #B0B0B0;
+            border-radius: 4px;
+            padding: 8px 12px;
+            transition: border-color 0.2s;
+        }
+        
+        input[type="number"]:focus, input[type="email"]:focus, input[type="tel"]:focus, input[type="text"]:focus {
+            outline: none;
+            border-color: #4A7C59;
+            box-shadow: 0 0 0 2px rgba(74, 124, 89, 0.2);
+        }
+        
+        select {
+            border: 1px solid #B0B0B0;
+            border-radius: 4px;
+            padding: 8px 12px;
+            transition: border-color 0.2s;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #4A7C59;
+            box-shadow: 0 0 0 2px rgba(74, 124, 89, 0.2);
+        }
+        
+        /* Error styling */
+        .error {
+            border-color: #EF4444;
+        }
+        
+        .error-message {
+            color: #EF4444;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        /* Success styling */
+        .success {
+            border-color: #10B981;
+        }
+        
+        /* Card styling */
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid #e5e5e5;
+            padding: 1.5rem;
+        }
+        
+        /* Section icons */
+        .section-icon {
+            background-color: #f8fafc;
+            border-radius: 8px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+        }
+        
+        /* Financial indicator */
+        .financial-indicator {
+            transition: all 0.3s ease;
+        }
+        
+        .financial-adequate {
+            background-color: #10B981;
+            color: white;
+        }
+        
+        .financial-inadequate {
+            background-color: #EF4444;
+            color: white;
+        }
+        
+        /* Service icons */
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+        }
+        
+        /* Language flags */
+        .flag-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .flag-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 60px;
+        }
+        
+        .flag-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
+        
+        .flag-name {
+            font-size: 0.7rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="bg-white text-black min-h-screen">
+    <!-- Header -->
+    <header class="py-4 border-b border-movwise-gray bg-white">
+        <div class="container mx-auto px-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <i class="fas fa-home text-movwise-green text-xl mr-2"></i>
+                <h1 class="text-2xl font-bold">MovWise</h1>
+            </div>
+            <nav class="hidden md:flex space-x-6">
+                <a href="#services" class="text-movwise-gray hover:text-black transition-colors">Services</a>
+                <a href="#calculator" class="text-movwise-gray hover:text-black transition-colors">ILR Calculator</a>
+                <a href="#languages" class="text-movwise-gray hover:text-black transition-colors">Languages</a>
+                <a href="#about" class="text-movwise-gray hover:text-black transition-colors">About</a>
+                <a href="#contact" class="text-movwise-gray hover:text-black transition-colors">Contact</a>
+            </nav>
+            <a href="mailto:contact@movwise.com" class="text-sm text-movwise-gray hover:text-black transition-colors">
+                contact@movwise.com
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="py-16 bg-gradient-to-r from-white to-gray-50">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold mb-6 max-w-3xl mx-auto">
+                Your Complete UK Settlement Partner
+            </h1>
+            <p class="text-xl text-movwise-gray max-w-2xl mx-auto mb-8">
+                Helping skilled immigrant workers settle in the UK swiftly with expert guidance on immigration, property, mortgages, and integration support.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="#calculator" class="px-6 py-3 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors font-medium">
+                    Check Your ILR Eligibility
+                </a>
+                <a href="#services" class="px-6 py-3 bg-white border border-movwise-green text-movwise-green rounded hover:bg-gray-50 transition-colors font-medium">
+                    Explore Our Services
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Our Services</h2>
+                <p class="text-movwise-gray max-w-2xl mx-auto">
+                    Comprehensive support for every step of your UK settlement journey
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Immigration Service -->
+                <div class="card text-center hover:shadow-lg transition-shadow">
+                    <div class="service-icon bg-blue-100 text-blue-600">
+                        <i class="fas fa-passport"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Immigration Advice</h3>
+                    <p class="text-movwise-gray mb-4">
+                        Expert guidance on visas, ILR applications, and citizenship pathways including Innovator Visa support.
+                    </p>
+                    <a href="#" class="inline-block px-4 py-2 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors text-sm font-medium">
+                        Find Your Immigration Adviser
+                    </a>
+                </div>
+                
+                <!-- Mortgage Service -->
+                <div class="card text-center hover:shadow-lg transition-shadow">
+                    <div class="service-icon bg-green-100 text-green-600">
+                        <i class="fas fa-pound-sign"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Mortgage Guidance</h3>
+                    <p class="text-movwise-gray mb-4">
+                        Specialist mortgage advice for newcomers, even without extensive UK credit history.
+                    </p>
+                    <a href="#" class="inline-block px-4 py-2 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors text-sm font-medium">
+                        Get a Mortgage Quote
+                    </a>
+                </div>
+                
+                <!-- Property Service -->
+                <div class="card text-center hover:shadow-lg transition-shadow">
+                    <div class="service-icon bg-purple-100 text-purple-600">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Property Legal Help</h3>
+                    <p class="text-movwise-gray mb-4">
+                        Expert conveyancing services to ensure your property purchase is legally sound and stress-free.
+                    </p>
+                    <a href="#" class="inline-block px-4 py-2 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors text-sm font-medium">
+                        Find a Property Solicitor
+                    </a>
+                </div>
+                
+                <!-- Support Service -->
+                <div class="card text-center hover:shadow-lg transition-shadow">
+                    <div class="service-icon bg-yellow-100 text-yellow-600">
+                        <i class="fas fa-hands-helping"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Integration Support</h3>
+                    <p class="text-movwise-gray mb-4">
+                        Volunteering opportunities and resources to accelerate your settlement and ILR application.
+                    </p>
+                    <a href="#" class="inline-block px-4 py-2 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors text-sm font-medium">
+                        Explore Support Options
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Languages Section -->
+    <section id="languages" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">We Speak Your Language</h2>
+                <p class="text-movwise-gray max-w-2xl mx-auto">
+                    Connect with professionals who understand both UK regulations and your cultural context
+                </p>
+            </div>
+            
+            <div class="flex flex-col lg:flex-row items-center gap-12">
+                <div class="lg:w-1/2">
+                    <div class="bg-gray-100 p-6 rounded-lg">
+                        <!-- Simplified UK map representation -->
+                        <div class="relative w-full h-64 bg-blue-50 rounded border border-gray-300 flex items-center justify-center">
+                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
+                                <i class="fas fa-map-marked-alt text-4xl text-movwise-green mb-2"></i>
+                                <p class="text-sm font-medium">United Kingdom</p>
+                            </div>
+                            <!-- Language flags around the map -->
+                            <div class="absolute -top-4 -left-4 flag-circle bg-red-100 text-red-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="absolute -top-4 -right-4 flag-circle bg-green-100 text-green-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="absolute -bottom-4 -left-4 flag-circle bg-blue-100 text-blue-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <div class="absolute -bottom-4 -right-4 flag-circle bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:w-1/2">
+                    <h3 class="text-xl font-bold mb-4">Available Languages</h3>
+                    <div class="flag-container">
+                        <div class="flag-item">
+                            <div class="flag-circle bg-orange-100 text-orange-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Hindi</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-green-100 text-green-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Urdu</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-red-100 text-red-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Tamil</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Telugu</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-red-100 text-red-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Kannada</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-green-100 text-green-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Malayalam</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-orange-100 text-orange-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Bengali</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Panjabi</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-green-100 text-green-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Gujarati</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-red-100 text-red-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Arabic</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-blue-100 text-blue-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Malay</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-yellow-100 text-yellow-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Shona</span>
+                        </div>
+                        <div class="flag-item">
+                            <div class="flag-circle bg-green-100 text-green-600">
+                                <i class="fas fa-flag"></i>
+                            </div>
+                            <span class="flag-name">Akan</span>
+                        </div>
+                    </div>
+                    
+                    <p class="mt-6 text-movwise-gray text-sm">
+                        And many more! Our network includes professionals fluent in over 20 languages to ensure you receive advice in the language you're most comfortable with.
+                    </p>
+                    
+                    <a href="#contact" class="inline-block mt-4 px-4 py-2 bg-movwise-yellow text-black rounded hover:bg-yellow-500 transition-colors font-medium">
+                        Find an Adviser in Your Language
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ILR Calculator Section -->
+    <section id="calculator" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold mb-4">ILR Eligibility Estimator</h2>
+                <p class="text-movwise-gray max-w-2xl mx-auto">
+                    Calculate your estimated Indefinite Leave to Remain eligibility based on the UK Home Office CP 1448 consultation paper
+                </p>
+            </div>
+
+            <!-- ILR Calculator Form -->
+            <form id="ilr-form" class="space-y-6">
+                <!-- Contribution Section -->
+                <div class="card">
+                    <div class="flex items-center mb-6">
+                        <div class="section-icon">
+                            <i class="fas fa-pound-sign text-movwise-green"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">Contribution</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Annual Salary (£)</label>
+                            <input type="number" id="salary" placeholder="e.g., 45000" class="w-full" required>
+                            <p class="text-xs text-movwise-gray mt-1">
+                                £120,000+ qualifies for 3-year pathway
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">UK Mortgage Holder?</label>
+                            <select id="mortgage" class="w-full">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input id="innovatorVisa" type="checkbox" class="mr-3">
+                            <label for="innovatorVisa" class="text-sm">Innovator Visa holder</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Residence Section -->
+                <div class="card">
+                    <div class="flex items-center mb-6">
+                        <div class="section-icon">
+                            <i class="fas fa-calendar-alt text-movwise-green"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">Residence</h2>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Years in UK with NI Contributions</label>
+                        <input type="number" id="years" step="0.1" placeholder="e.g., 5" class="w-full" required>
+                    </div>
+                </div>
+
+                <!-- Integration Section -->
+                <div class="card">
+                    <div class="flex items-center mb-6">
+                        <div class="section-icon">
+                            <i class="fas fa-book-open text-movwise-green"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">Integration</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">English Language Level</label>
+                            <select id="english" class="w-full" required>
+                                <option value="">Select level</option>
+                                <option value="native">Native Speaker</option>
+                                <option value="c2">C2 (Proficiency)</option>
+                                <option value="c1">C1 (Advanced)</option>
+                                <option value="b2">B2 (Upper Intermediate)</option>
+                                <option value="b1">B1 (Intermediate)</option>
+                                <option value="a2">A2 (Elementary)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Volunteering Hours (Annual)</label>
+                            <input type="number" id="volunteering" placeholder="e.g., 100" class="w-full">
+                            <p class="text-xs text-movwise-gray mt-1">
+                                200+ hours can reduce waiting time by ~1 year
+                            </p>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Public Service Employment?</label>
+                            <select id="publicService" class="w-full">
+                                <option value="no">No</option>
+                                <option value="yes">Yes (NHS, Education, etc.)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input id="lifeInUKPassed" type="checkbox" checked class="mr-3">
+                            <label for="lifeInUKPassed" class="text-sm">Life in the UK test passed</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Character Section -->
+                <div class="card">
+                    <div class="flex items-center mb-6">
+                        <div class="section-icon">
+                            <i class="fas fa-shield-alt text-movwise-green"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">Character Assessment</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Public Benefits Use?</label>
+                            <select id="benefits" class="w-full">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Criminal Record?</label>
+                            <select id="criminality" class="w-full">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Illegal Entry History?</label>
+                            <select id="illegalEntry" class="w-full">
+                                <option value="no">No</option>
+                                <option value="yes">Yes</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input id="previousBreaches" type="checkbox" class="mr-3">
+                            <label for="previousBreaches" class="text-sm">Previous immigration breaches</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dependents Section -->
+                <div class="card">
+                    <div class="flex items-center mb-6">
+                        <div class="section-icon">
+                            <i class="fas fa-users text-movwise-green"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold">Dependents</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Adult Dependents</label>
+                                <input type="number" id="adults" min="0" value="0" class="w-full">
+                                <p class="text-xs text-movwise-gray mt-1">
+                                    Must meet English & Life in UK requirements
+                                </p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1">Child Dependents</label>
+                                <input type="number" id="children" min="0" value="0" class="w-full">
+                                <p class="text-xs text-movwise-gray mt-1">
+                                    Must be under 18 and in continuous education
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <!-- Financial Requirement Indicator -->
+                        <div id="financial-indicator" class="p-3 rounded-lg bg-gray-50 border hidden">
+                            <h4 class="font-semibold text-sm mb-2">Financial Requirements</h4>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm">Minimum Required Income:</span>
+                                <span id="required-income" class="font-semibold">£0</span>
+                            </div>
+                            <div class="flex justify-between items-center mt-1">
+                                <span class="text-sm">Your Income:</span>
+                                <span id="your-income" class="font-semibold">£0</span>
+                            </div>
+                            <div id="financial-status" class="mt-2 text-sm font-medium text-center py-1 rounded financial-indicator">
+                                <!-- Status will be populated by JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information -->
+                <div class="card bg-blue-50 border-blue-200">
+                    <div class="mb-6">
+                        <h2 class="text-2xl font-bold mb-2">
+                            View Your Results
+                        </h2>
+                        <p class="text-movwise-gray text-sm">
+                            Enter your contact details to see your ILR score and receive free updates
+                        </p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Full Name</label>
+                            <input type="text" id="fullName" placeholder="Your full name" class="w-full" required>
+                            <div id="name-error" class="error-message hidden">Please enter your full name</div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Email Address</label>
+                            <input type="email" id="email" placeholder="your.email@example.com" class="w-full" required>
+                            <div id="email-error" class="error-message hidden">Please enter a valid email address</div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="+44 1234 567890" class="w-full" required>
+                            <div id="phone-error" class="error-message hidden">Please enter a valid UK phone number</div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input id="newsletter" type="checkbox" checked class="mr-3">
+                            <label for="newsletter" class="text-sm">I'd like to receive free updates about ILR policy changes</label>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input id="volunteeringInterest" type="checkbox" class="mr-3">
+                            <label for="volunteeringInterest" class="text-sm">I'm interested in volunteering opportunities</label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="submit-btn" class="w-full py-3 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors font-medium text-lg">
+                    Calculate My ILR Score
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">About MovWise</h2>
+                <p class="text-movwise-gray max-w-3xl mx-auto">
+                    We are dedicated to helping skilled immigrant workers navigate the complexities of UK settlement with confidence and clarity.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="text-center">
+                    <div class="bg-movwise-green text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bullseye text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Our Mission</h3>
+                    <p class="text-movwise-gray">
+                        To simplify the UK settlement process for skilled immigrants through integrated services and expert guidance.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-movwise-green text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-eye text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Our Vision</h3>
+                    <p class="text-movwise-gray">
+                        A world where skilled immigrants can seamlessly transition to their new life in the UK.
+                    </p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-movwise-green text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-handshake text-xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Our Values</h3>
+                    <p class="text-movwise-gray">
+                        Integrity, expertise, cultural understanding, and commitment to our clients' success.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Get In Touch</h2>
+                <p class="text-movwise-gray max-w-2xl mx-auto">
+                    Ready to start your UK settlement journey? Contact us today for personalized assistance.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">Contact Information</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <i class="fas fa-envelope text-movwise-green mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium">Email</p>
+                                <p class="text-movwise-gray">contact@movwise.com</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-phone text-movwise-green mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium">Phone</p>
+                                <p class="text-movwise-gray">+44 20 1234 5678</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <i class="fas fa-map-marker-alt text-movwise-green mt-1 mr-3"></i>
+                            <div>
+                                <p class="font-medium">Address</p>
+                                <p class="text-movwise-gray">123 Settlement Street, London, UK</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6">
+                        <h4 class="font-bold mb-2">Follow Us</h4>
+                        <div class="flex space-x-4">
+                            <a href="#" class="text-movwise-gray hover:text-movwise-green transition-colors">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="text-movwise-gray hover:text-movwise-green transition-colors">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="text-movwise-gray hover:text-movwise-green transition-colors">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="text-movwise-gray hover:text-movwise-green transition-colors">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="text-xl font-bold mb-4">Send Us a Message</h3>
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Your Name</label>
+                            <input type="text" class="w-full" placeholder="Your full name">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Your Email</label>
+                            <input type="email" class="w-full" placeholder="your.email@example.com">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Service Interested In</label>
+                            <select class="w-full">
+                                <option value="">Select a service</option>
+                                <option value="immigration">Immigration Advice</option>
+                                <option value="mortgage">Mortgage Guidance</option>
+                                <option value="property">Property Legal Help</option>
+                                <option value="support">Integration Support</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Preferred Language</label>
+                            <select class="w-full">
+                                <option value="">Select a language</option>
+                                <option value="hindi">Hindi</option>
+                                <option value="urdu">Urdu</option>
+                                <option value="tamil">Tamil</option>
+                                <option value="telugu">Telugu</option>
+                                <option value="kannada">Kannada</option>
+                                <option value="malayalam">Malayalam</option>
+                                <option value="bengali">Bengali</option>
+                                <option value="panjabi">Panjabi</option>
+                                <option value="gujarati">Gujarati</option>
+                                <option value="arabic">Arabic</option>
+                                <option value="malay">Malay</option>
+                                <option value="shona">Shona</option>
+                                <option value="akan">Akan</option>
+                                <option value="english">English</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-medium mb-1">Message</label>
+                            <textarea rows="4" class="w-full" placeholder="How can we help you?"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="w-full py-2 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors font-medium">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div class="p-6 border-b border-movwise-gray">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-3xl font-bold">Your ILR Scorecard</h2>
+                    <button id="close-modal" class="text-movwise-gray hover:text-black">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <p class="text-movwise-gray mt-1">
+                    Based on the UK Home Office CP 1448 consultation paper
+                </p>
+            </div>
+            
+            <div class="p-6 space-y-6">
+                <!-- Total Score -->
+                <div class="text-center p-6 bg-blue-50 rounded-lg border-2 border-blue-200">
+                    <div class="text-5xl font-bold mb-2" id="total-score">
+                        0
+                    </div>
+                    <div class="text-sm text-movwise-gray uppercase tracking-wide">
+                        Total Points
+                    </div>
+                </div>
+
+                <!-- Pathway Info -->
+                <div id="pathway-info" class="p-4 bg-green-100 border border-green-300 rounded-lg hidden">
+                    <p class="text-sm font-semibold">
+                        <i class="fas fa-check-circle text-green-600 mr-2"></i>
+                        Eligible for 3-Year Accelerated Pathway
+                    </p>
+                    <p class="text-xs text-movwise-gray mt-1">
+                        As a top tax bracket earner (£120k+) or Innovator Visa holder, you qualify for the fast-track settlement route
+                    </p>
+                </div>
+
+                <div class="p-4 bg-white border rounded-lg">
+                    <p class="text-sm font-semibold mb-1">
+                        Estimated Time to ILR
+                    </p>
+                    <p class="text-2xl font-bold text-movwise-green" id="estimated-years">
+                        0 years
+                    </p>
+                </div>
+
+                <!-- Score Breakdown -->
+                <div class="space-y-3">
+                    <h3 class="text-xl font-bold">Score Breakdown</h3>
+                    
+                    <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-pound-sign text-movwise-green"></i>
+                            <span class="text-sm font-medium">Contribution</span>
+                        </div>
+                        <span class="text-lg font-bold" id="contribution-score">0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-calendar-alt text-movwise-green"></i>
+                            <span class="text-sm font-medium">Residence</span>
+                        </div>
+                        <span class="text-lg font-bold" id="residence-score">0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-book-open text-movwise-green"></i>
+                            <span class="text-sm font-medium">Integration</span>
+                        </div>
+                        <span class="text-lg font-bold" id="integration-score">0</span>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-shield-alt text-movwise-green"></i>
+                            <span class="text-sm font-medium">Character</span>
+                        </div>
+                        <span class="text-lg font-bold" id="character-score">0</span>
+                    </div>
+                </div>
+
+                <!-- Dependents Summary -->
+                <div id="dependents-summary" class="p-4 bg-gray-50 rounded-lg border hidden">
+                    <h3 class="font-semibold mb-2">Dependents Assessment</h3>
+                    <div id="dependents-details" class="text-sm text-movwise-gray space-y-1">
+                        <!-- Details will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="p-4 bg-gray-50 rounded-lg border">
+                    <h3 class="font-semibold mb-2">Next Steps</h3>
+                    <ul class="text-sm text-movwise-gray space-y-1">
+                        <li><i class="fas fa-envelope text-movwise-green mr-2"></i>We'll send your detailed report to your email</li>
+                        <li><i class="fas fa-bell text-movwise-green mr-2"></i>You'll receive free updates on CP 1448 implementation</li>
+                        <li><i class="fas fa-hands-helping text-movwise-green mr-2"></i>Learn about volunteering opportunities to reduce wait time</li>
+                        <li><i class="fas fa-user-tie text-movwise-green mr-2"></i>Get personalized guidance for your ILR journey</li>
+                    </ul>
+                </div>
+
+                <button id="close-results" class="w-full py-3 bg-movwise-green text-white rounded hover:bg-green-600 transition-colors font-medium">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-movwise-gray py-8">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-xl font-bold mb-4">MovWise</h2>
+                    <p class="text-movwise-gray max-w-md">Providing expert guidance on UK immigration pathways and settlement options.</p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-8">
+                    <div>
+                        <h3 class="font-semibold mb-3">Services</h3>
+                        <ul class="space-y-2 text-sm text-movwise-gray">
+                            <li><a href="#" class="hover:text-black transition-colors">ILR Applications</a></li>
+                            <li><a href="#" class="hover:text-black transition-colors">Citizenship</a></li>
+                            <li><a href="#" class="hover:text-black transition-colors">Visa Extensions</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-3">Resources</h3>
+                        <ul class="space-y-2 text-sm text-movwise-gray">
+                            <li><a href="#" class="hover:text-black transition-colors">Guides</a></li>
+                            <li><a href="#" class="hover:text-black transition-colors">Calculators</a></li>
+                            <li><a href="#" class="hover:text-black transition-colors">News</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold mb-3">Company</h3>
+                        <ul class="space-y-2 text-sm text-movwise-gray">
+                            <li><a href="#" class="hover:text-black transition-colors">About Us</a></li>
+                            <li><a href="#" class="hover:text-black transition-colors">Contact</a></li>
+                            <li><a href="#" class="hover:text-black transition-colors">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-movwise-gray mt-8 pt-6 text-sm text-movwise-gray text-center">
+                <p>© 2023 MovWise. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // State management
+        const state = {
+            contactInfo: {
+                fullName: '',
+                email: '',
+                phone: '',
+                newsletter: true,
+                volunteeringInterest: false
+            },
+            salary: 0,
+            yearsResidence: 0,
+            volunteerHours: 0,
+            mortgage: 'no',
+            englishLevel: '',
+            publicService: 'no',
+            benefitsUse: 'no',
+            criminality: 'no',
+            illegalEntry: 'no',
+            previousBreaches: false,
+            innovatorVisa: false,
+            lifeInUKPassed: true,
+            adultDependents: 0,
+            childDependents: 0
+        };
+
+        // DOM elements
+        const elements = {
+            form: document.getElementById('ilr-form'),
+            fullName: document.getElementById('fullName'),
+            email: document.getElementById('email'),
+            phone: document.getElementById('phone'),
+            newsletter: document.getElementById('newsletter'),
+            volunteeringInterest: document.getElementById('volunteeringInterest'),
+            salary: document.getElementById('salary'),
+            years: document.getElementById('years'),
+            volunteering: document.getElementById('volunteering'),
+            mortgage: document.getElementById('mortgage'),
+            english: document.getElementById('english'),
+            publicService: document.getElementById('publicService'),
+            benefits: document.getElementById('benefits'),
+            criminality: document.getElementById('criminality'),
+            illegalEntry: document.getElementById('illegalEntry'),
+            previousBreaches: document.getElementById('previousBreaches'),
+            innovatorVisa: document.getElementById('innovatorVisa'),
+            lifeInUKPassed: document.getElementById('lifeInUKPassed'),
+            adults: document.getElementById('adults'),
+            children: document.getElementById('children'),
+            submitBtn: document.getElementById('submit-btn'),
+            resultsModal: document.getElementById('results-modal'),
+            closeModal: document.getElementById('close-modal'),
+            closeResults: document.getElementById('close-results'),
+            totalScore: document.getElementById('total-score'),
+            pathwayInfo: document.getElementById('pathway-info'),
+            estimatedYears: document.getElementById('estimated-years'),
+            contributionScore: document.getElementById('contribution-score'),
+            residenceScore: document.getElementById('residence-score'),
+            integrationScore: document.getElementById('integration-score'),
+            characterScore: document.getElementById('character-score'),
+            nameError: document.getElementById('name-error'),
+            emailError: document.getElementById('email-error'),
+            phoneError: document.getElementById('phone-error'),
+            financialIndicator: document.getElementById('financial-indicator'),
+            requiredIncome: document.getElementById('required-income'),
+            yourIncome: document.getElementById('your-income'),
+            financialStatus: document.getElementById('financial-status'),
+            dependentsSummary: document.getElementById('dependents-summary'),
+            dependentsDetails: document.getElementById('dependents-details')
+        };
+
+        // Validation functions
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validatePhone(phone) {
+            const re = /^(\+44\s?7\d{3}|\(?07\d{3}\)?)\s?\d{3}\s?\d{3}$/;
+            return re.test(phone.replace(/\s/g, ''));
+        }
+
+        function validateName(name) {
+            return name.trim().length > 0;
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.classList.remove('hidden');
+            element.textContent = message;
+        }
+
+        function hideError(elementId) {
+            const element = document.getElementById(elementId);
+            element.classList.add('hidden');
+        }
+
+        function markValid(input) {
+            input.classList.remove('error');
+        }
+
+        function markInvalid(input) {
+            input.classList.add('error');
+        }
+
+        // Dependents Financial Calculation
+        function calculateFinancialRequirements(adultDependents, childDependents) {
+            const baseThreshold = 18600;
+            const childThreshold = 2400;
+            return baseThreshold + (childDependents * childThreshold);
+        }
+
+        function updateFinancialIndicator(salary, adultDependents, childDependents) {
+            const requiredIncome = calculateFinancialRequirements(adultDependents, childDependents);
+            
+            elements.requiredIncome.textContent = `£${requiredIncome.toLocaleString()}`;
+            elements.yourIncome.textContent = `£${salary.toLocaleString()}`;
+            
+            if (salary >= requiredIncome) {
+                elements.financialStatus.textContent = '✓ Meets Financial Requirements';
+                elements.financialStatus.className = 'mt-2 text-sm font-medium text-center py-1 rounded financial-indicator financial-adequate';
+            } else {
+                elements.financialStatus.textContent = '✗ Below Financial Requirements';
+                elements.financialStatus.className = 'mt-2 text-sm font-medium text-center py-1 rounded financial-indicator financial-inadequate';
+            }
+            
+            elements.financialIndicator.classList.remove('hidden');
+        }
+
+        // Dependents Impact Calculation
+        function calculateDependentsImpact(adultDependents, childDependents, mainApplicantSalary) {
+            const impacts = {
+                financialPressure: 0,
+                integrationComplexity: 0,
+                timelineImpact: 0,
+                reasons: []
+            };
+
+            // Financial Pressure Calculation
+            const requiredIncome = calculateFinancialRequirements(adultDependents, childDependents);
+            
+            if (mainApplicantSalary < requiredIncome) {
+                impacts.financialPressure = -20;
+                impacts.reasons.push(`Income below required threshold for ${adultDependents} adult(s) and ${childDependents} child(ren)`);
+            }
+
+            // Integration Complexity
+            if (adultDependents > 0) {
+                impacts.integrationComplexity = -10 * adultDependents;
+                impacts.reasons.push(`${adultDependents} adult dependent(s) must meet English and Life in UK requirements`);
+            }
+
+            // No direct timeline extension, but affects overall viability
+            if (adultDependents + childDependents > 2) {
+                impacts.timelineImpact = -5;
+                impacts.reasons.push('Large family size may affect application complexity');
+            }
+
+            return impacts;
+        }
+
+        // Main Calculation Logic based on CP1448
+        function calculateScore() {
+            let contribution = 0;
+            let residence = 0;
+            let integration = 0;
+            let character = 0;
+            const reasons = [];
+
+            // Contribution Score (based on salary - CP 1448)
+            const salary = parseFloat(state.salary) || 0;
+            if (salary >= 120000) {
+                contribution = 100; // Top tax bracket - eligible for 3-year pathway
+                reasons.push('£120,000+ salary qualifies for 3-year accelerated pathway');
+            } else if (salary >= 80000) {
+                contribution = 80;
+            } else if (salary >= 50000) {
+                contribution = 60;
+                reasons.push('£50,270+ salary qualifies for 5-year high earner pathway');
+            } else if (salary >= 35000) {
+                contribution = 40;
+            } else if (salary >= 25000) {
+                contribution = 20;
+            }
+
+            // Mortgage bonus
+            if (state.mortgage === "yes") {
+                contribution += 10;
+                reasons.push('UK mortgage holder - additional integration points');
+            }
+
+            // Residence Score (years in UK with NI contributions)
+            const years = parseFloat(state.yearsResidence) || 0;
+            residence = Math.min(years * 10, 100); // 10 points per year, max 100
+
+            // Integration Score
+            // English level
+            const englishLevels = {
+                "native": 30,
+                "c2": 25,
+                "c1": 20,
+                "b2": 15,
+                "b1": 10,
+                "a2": 5
+            };
+            integration += englishLevels[state.englishLevel] || 0;
+
+            // Volunteering (CP 1448 mentions volunteering can reduce waiting time by ~1 year)
+            const volunteeringHours = parseFloat(state.volunteerHours) || 0;
+            if (volunteeringHours >= 200) {
+                integration += 30;
+                reasons.push('200+ volunteering hours - potential 1-year reduction');
+            } else if (volunteeringHours >= 100) {
+                integration += 20;
+                reasons.push('100+ volunteering hours - potential 6-month reduction');
+            } else if (volunteeringHours >= 50) {
+                integration += 10;
+            }
+
+            // Public service
+            if (state.publicService === "yes") {
+                integration += 20;
+                reasons.push('Public service employment - accelerated consideration');
+            }
+            
+            // Life in the UK test
+            if (state.lifeInUKPassed) {
+                integration += 10;
+            }
+
+            // Character Score (penalties for negative factors)
+            character = 100; // Start at 100
+
+            // Benefits use penalty
+            if (state.benefitsUse === "yes") {
+                character -= 30;
+                reasons.push('Public funds use - extended qualifying period');
+            }
+
+            // Criminality penalty
+            if (state.criminality === "yes") {
+                character -= 50;
+                reasons.push('Criminal record - blocks accelerated pathways');
+            }
+
+            // Illegal entry penalty
+            if (state.illegalEntry === "yes") {
+                character -= 60;
+                reasons.push('Illegal entry history - maximum penalty applied');
+            }
+            
+            // Previous breaches penalty
+            if (state.previousBreaches) {
+                character -= 20;
+                reasons.push('Previous immigration breaches - blocks reductions');
+            }
+
+            character = Math.max(character, 0);
+
+            // Dependents Impact
+            const dependentsImpact = calculateDependentsImpact(
+                state.adultDependents, 
+                state.childDependents, 
+                state.salary
+            );
+
+            integration += dependentsImpact.integrationComplexity;
+            character += dependentsImpact.financialPressure;
+            dependentsImpact.reasons.forEach(reason => reasons.push(reason));
+
+            const total = contribution + residence + integration + character;
+
+            // Determine eligibility for pathways
+            const eligibleFor3YearPathway = salary >= 120000 || state.innovatorVisa;
+            const eligibleFor5YearPathway = salary >= 50270;
+
+            // Estimate years to ILR based on pathways and reductions
+            let estimatedYears = 10; // Standard pathway (CP1448 baseline)
+            
+            // Apply pathway reductions
+            if (eligibleFor3YearPathway) {
+                estimatedYears = 3;
+                reasons.push('3-year pathway: Innovator Visa or £120k+ earner');
+            } else if (eligibleFor5YearPathway) {
+                estimatedYears = 5;
+                reasons.push('5-year pathway: £50,270+ high earner');
+            }
+            
+            // Apply integration reductions (but not for 3-year pathway)
+            if (!eligibleFor3YearPathway) {
+                // Volunteering reduction (~1 year as per CP 1448)
+                if (volunteeringHours >= 200) {
+                    estimatedYears = Math.max(3, estimatedYears - 1);
+                } else if (volunteeringHours >= 100) {
+                    estimatedYears = Math.max(5, estimatedYears - 0.5);
+                }
+
+                // English level reduction
+                if (state.englishLevel === 'c1' || state.englishLevel === 'c2' || state.englishLevel === 'native') {
+                    estimatedYears = Math.max(5, estimatedYears - 0.5);
+                }
+                
+                // Mortgage reduction
+                if (state.mortgage === 'yes') {
+                    estimatedYears = Math.max(5, estimatedYears - 0.5);
+                }
+            }
+
+            // Apply character penalties
+            if (state.benefitsUse === 'yes') {
+                estimatedYears = Math.max(15, estimatedYears);
+            }
+            
+            if (state.illegalEntry === 'yes') {
+                estimatedYears = 30;
+            }
+            
+            if (state.criminality === 'yes') {
+                estimatedYears = Math.max(15, estimatedYears);
+            }
+
+            return {
+                contribution,
+                residence,
+                integration,
+                character,
+                total,
+                eligibleFor3YearPathway,
+                estimatedYearsToILR: estimatedYears,
+                reasons
+            };
+        }
+
+        // Update UI with results
+        function updateResultsUI(result) {
+            elements.totalScore.textContent = result.total;
+            elements.contributionScore.textContent = result.contribution;
+            elements.residenceScore.textContent = result.residence;
+            elements.integrationScore.textContent = result.integration;
+            elements.characterScore.textContent = result.character;
+            elements.estimatedYears.textContent = `${result.estimatedYearsToILR} years`;
+            
+            if (result.eligibleFor3YearPathway) {
+                elements.pathwayInfo.classList.remove('hidden');
+            } else {
+                elements.pathwayInfo.classList.add('hidden');
+            }
+            
+            // Update dependents summary
+            if (state.adultDependents > 0 || state.childDependents > 0) {
+                let dependentsHTML = '';
+                if (state.adultDependents > 0) {
+                    dependentsHTML += `<p><i class="fas fa-user text-movwise-green mr-2"></i>${state.adultDependents} adult dependent(s) - must meet integration requirements</p>`;
+                }
+                if (state.childDependents > 0) {
+                    dependentsHTML += `<p><i class="fas fa-child text-movwise-green mr-2"></i>${state.childDependents} child dependent(s) - follow main applicant timeline</p>`;
+                }
+                
+                const requiredIncome = calculateFinancialRequirements(state.adultDependents, state.childDependents);
+                if (state.salary >= requiredIncome) {
+                    dependentsHTML += `<p><i class="fas fa-check-circle text-green-600 mr-2"></i>Meets financial requirements for dependents</p>`;
+                } else {
+                    dependentsHTML += `<p><i class="fas fa-exclamation-triangle text-yellow-600 mr-2"></i>Below financial requirements for dependents</p>`;
+                }
+                
+                elements.dependentsDetails.innerHTML = dependentsHTML;
+                elements.dependentsSummary.classList.remove('hidden');
+            } else {
+                elements.dependentsSummary.classList.add('hidden');
+            }
+        }
+
+        // Event listeners
+        function setupEventListeners() {
+            // Contact form validation
+            elements.fullName.addEventListener('blur', () => {
+                if (validateName(elements.fullName.value)) {
+                    markValid(elements.fullName);
+                    hideError('name-error');
+                } else {
+                    markInvalid(elements.fullName);
+                    showError('name-error', 'Please enter your full name');
+                }
+            });
+            
+            elements.email.addEventListener('blur', () => {
+                if (validateEmail(elements.email.value)) {
+                    markValid(elements.email);
+                    hideError('email-error');
+                } else {
+                    markInvalid(elements.email);
+                    showError('email-error', 'Please enter a valid email address');
+                }
+            });
+            
+            elements.phone.addEventListener('blur', () => {
+                if (validatePhone(elements.phone.value)) {
+                    markValid(elements.phone);
+                    hideError('phone-error');
+                } else {
+                    markInvalid(elements.phone);
+                    showError('phone-error', 'Please enter a valid UK phone number');
+                }
+            });
+            
+            // Update financial indicator when dependents or salary change
+            elements.adults.addEventListener('input', updateFinancialDisplay);
+            elements.children.addEventListener('input', updateFinancialDisplay);
+            elements.salary.addEventListener('input', updateFinancialDisplay);
+            
+            function updateFinancialDisplay() {
+                const salary = parseFloat(elements.salary.value) || 0;
+                const adults = parseInt(elements.adults.value) || 0;
+                const children = parseInt(elements.children.value) || 0;
+                
+                if (salary > 0 && (adults > 0 || children > 0)) {
+                    updateFinancialIndicator(salary, adults, children);
+                } else {
+                    elements.financialIndicator.classList.add('hidden');
+                }
+            }
+            
+            // Form submission
+            elements.form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                let isValid = true;
+                
+                // Validate all fields
+                if (!validateName(elements.fullName.value)) {
+                    markInvalid(elements.fullName);
+                    showError('name-error', 'Please enter your full name');
+                    isValid = false;
+                }
+                
+                if (!validateEmail(elements.email.value)) {
+                    markInvalid(elements.email);
+                    showError('email-error', 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                if (!validatePhone(elements.phone.value)) {
+                    markInvalid(elements.phone);
+                    showError('phone-error', 'Please enter a valid UK phone number');
+                    isValid = false;
+                }
+                
+                if (!elements.english.value) {
+                    markInvalid(elements.english);
+                    isValid = false;
+                }
+                
+                if (!elements.salary.value) {
+                    markInvalid(elements.salary);
+                    isValid = false;
+                }
+                
+                if (!elements.years.value) {
+                    markInvalid(elements.years);
+                    isValid = false;
+                }
+                
+                if (isValid) {
+                    // Update state with form values
+                    state.contactInfo = {
+                        fullName: elements.fullName.value,
+                        email: elements.email.value,
+                        phone: elements.phone.value,
+                        newsletter: elements.newsletter.checked,
+                        volunteeringInterest: elements.volunteeringInterest.checked
+                    };
+                    
+                    state.salary = parseFloat(elements.salary.value) || 0;
+                    state.yearsResidence = parseFloat(elements.years.value) || 0;
+                    state.volunteerHours = parseFloat(elements.volunteering.value) || 0;
+                    state.mortgage = elements.mortgage.value;
+                    state.englishLevel = elements.english.value;
+                    state.publicService = elements.publicService.value;
+                    state.benefitsUse = elements.benefits.value;
+                    state.criminality = elements.criminality.value;
+                    state.illegalEntry = elements.illegalEntry.value;
+                    state.previousBreaches = elements.previousBreaches.checked;
+                    state.innovatorVisa = elements.innovatorVisa.checked;
+                    state.lifeInUKPassed = elements.lifeInUKPassed.checked;
+                    state.adultDependents = parseInt(elements.adults.value) || 0;
+                    state.childDependents = parseInt(elements.children.value) || 0;
+                    
+                    // Calculate results
+                    const result = calculateScore();
+                    
+                    // Update UI with results
+                    updateResultsUI(result);
+                    
+                    // Show results modal
+                    elements.resultsModal.classList.remove('hidden');
+                    
+                    // Send data to server (simulated)
+                    console.log('Form data saved:', state);
+                }
+            });
+            
+            // Modal close events
+            elements.closeModal.addEventListener('click', () => {
+                elements.resultsModal.classList.add('hidden');
+            });
+            
+            elements.closeResults.addEventListener('click', () => {
+                elements.resultsModal.classList.add('hidden');
+            });
+            
+            // Close modal when clicking outside
+            elements.resultsModal.addEventListener('click', (e) => {
+                if (e.target === elements.resultsModal) {
+                    elements.resultsModal.classList.add('hidden');
+                }
+            });
+        }
+
+        // Initialize the application
+        function init() {
+            setupEventListeners();
+        }
+
+        // Start the application when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
