@@ -1,26 +1,37 @@
 import express from 'express';
 import { pool } from '../db/init.js';
-import { z } from 'zod';
+import {
+  validateName,
+  validateEmail,
+  validateMessage,
+  validateEnumField,
+  validatePagination,
+  validateId,
+} from '../utils/validation.js';
+import { rotateCsrfToken } from '../utils/csrf.js';
+import { contactFormLimiter } from '../middleware/rateLimit.js';
 
 const router = express.Router();
 
-// Validation schema
-const contactSubmissionSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
-  service: z.string().optional(),
-  language: z.string().optional(),
-  message: z.string().optional(),
-});
-
 // POST /api/contact/submit - Save contact form submission
-router.post('/submit', async (req, res) => {
+// Rate limited: 10 requests per minute per IP
+router.post('/submit', contactFormLimiter, async (req, res) => {
   try {
     console.log('Received contact form submission:', req.body);
     
-    const validatedData = contactSubmissionSchema.parse(req.body);
+    // Server-side validation - never trust client input
+    const validatedData = {
+      name: validateName(req.body.name),
+      email: validateEmail(req.body.email),
+      service: validateEnumField(req.body.service, 50),
+      language: validateEnumField(req.body.language, 50),
+      message: req.body.message ? validateMessage(req.body.message, 2000) : null,
+    };
+    
     console.log('Validated data:', validatedData);
 
+    // SQL Injection Prevention: Using parameterized queries ($1, $2, etc.)
+    // All user input is passed as parameters, never concatenated into SQL strings
     const query = `
       INSERT INTO contact_submissions (
         name, email, service, language, message
@@ -50,6 +61,10 @@ router.post('/submit', async (req, res) => {
     const result = await pool.query(query, values);
     console.log('✅ Query successful, inserted ID:', result.rows[0].id);
 
+    // Rotate CSRF token after successful submission (security best practice)
+    // This invalidates the used token and generates a new one
+    const newCsrfToken = rotateCsrfToken(res, req);
+
     res.status(201).json({
       success: true,
       message: 'Contact form submitted successfully',
@@ -57,13 +72,16 @@ router.post('/submit', async (req, res) => {
         id: result.rows[0].id,
         createdAt: result.rows[0].created_at,
       },
+      // Return new CSRF token so frontend can update its cache
+      csrfToken: newCsrfToken,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    // Validation errors
+    if (error instanceof Error && (error.message.includes('must be') || error.message.includes('can only') || error.message.includes('Invalid') || error.message.includes('required'))) {
       return res.status(400).json({
         success: false,
         message: 'Validation error',
-        errors: error.errors,
+        error: error.message,
       });
     }
 
@@ -97,10 +115,10 @@ router.post('/submit', async (req, res) => {
 // GET /api/contact/submissions - Get all contact submissions (with pagination)
 router.get('/submissions', async (req, res) => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const offset = (page - 1) * limit;
+    // Validate pagination parameters
+    const { page, limit, offset } = validatePagination(req.query.page, req.query.limit);
 
+    // SQL Injection Prevention: Using parameterized queries for pagination
     const query = `
       SELECT 
         id, name, email, service, language, message, created_at
@@ -109,6 +127,7 @@ router.get('/submissions', async (req, res) => {
       LIMIT $1 OFFSET $2
     `;
 
+    // No user input in COUNT query - safe
     const countQuery = 'SELECT COUNT(*) FROM contact_submissions';
 
     const [results, countResult] = await Promise.all([
@@ -142,8 +161,10 @@ router.get('/submissions', async (req, res) => {
 // GET /api/contact/submission/:id - Get a specific contact submission
 router.get('/submission/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    // Validate ID parameter
+    const id = validateId(req.params.id);
 
+    // SQL Injection Prevention: Using parameterized query for ID
     const query = 'SELECT * FROM contact_submissions WHERE id = $1';
     const result = await pool.query(query, [id]);
 

@@ -1,44 +1,68 @@
 import express from 'express';
 import { pool } from '../db/init.js';
-import { z } from 'zod';
+import {
+  validateName,
+  validateEmail,
+  validatePhone,
+  validateNumber,
+  validateBoolean,
+  validateYesNo,
+  validateEnumField,
+  validatePagination,
+  validateId,
+} from '../utils/validation.js';
+import { rotateCsrfToken } from '../utils/csrf.js';
+import { ilrFormLimiter } from '../middleware/rateLimit.js';
 
 const router = express.Router();
 
-// Validation schema
-const ilrSubmissionSchema = z.object({
-  fullName: z.string().min(1),
-  email: z.string().email(),
-  phone: z.string().min(1),
-  salary: z.number().optional(),
-  mortgage: z.enum(['yes', 'no']).optional(),
-  innovatorVisa: z.boolean().optional(),
-  yearsResidence: z.number().optional(),
-  englishLevel: z.string().optional(),
-  volunteeringHours: z.number().optional(),
-  publicService: z.enum(['yes', 'no']).optional(),
-  lifeInUKPassed: z.boolean().optional(),
-  benefitsUse: z.enum(['yes', 'no']).optional(),
-  criminality: z.enum(['yes', 'no']).optional(),
-  illegalEntry: z.enum(['yes', 'no']).optional(),
-  previousBreaches: z.boolean().optional(),
-  adultDependents: z.number().optional(),
-  childDependents: z.number().optional(),
-  contributionScore: z.number().optional(),
-  residenceScore: z.number().optional(),
-  integrationScore: z.number().optional(),
-  characterScore: z.number().optional(),
-  totalScore: z.number().optional(),
-  eligibleFor3YearPathway: z.boolean().optional(),
-  estimatedYearsToILR: z.number().optional(),
-  newsletter: z.boolean().optional(),
-  volunteeringInterest: z.boolean().optional(),
-});
-
 // POST /api/ilr/submit - Save ILR submission
-router.post('/submit', async (req, res) => {
+// Rate limited: 5 requests per minute per IP
+router.post('/submit', ilrFormLimiter, async (req, res) => {
   try {
-    const validatedData = ilrSubmissionSchema.parse(req.body);
+    
+    // Server-side validation - never trust client input
+    const validatedData = {
+      fullName: validateName(req.body.fullName),
+      email: validateEmail(req.body.email),
+      phone: validatePhone(req.body.phone),
+      salary: validateNumber(req.body.salary, 0, 10000000), // 0 to 10M
+      mortgage: validateYesNo(req.body.mortgage),
+      innovatorVisa: req.body.innovatorVisa !== undefined ? validateBoolean(req.body.innovatorVisa) : false,
+      yearsResidence: validateNumber(req.body.yearsResidence, 0, 100), // 0 to 100 years
+      englishLevel: validateEnumField(req.body.englishLevel, 50),
+      volunteeringHours: validateNumber(req.body.volunteeringHours, 0, 10000), // 0 to 10k hours
+      publicService: validateYesNo(req.body.publicService),
+      lifeInUKPassed: req.body.lifeInUKPassed !== undefined ? validateBoolean(req.body.lifeInUKPassed) : true,
+      benefitsUse: validateYesNo(req.body.benefitsUse),
+      criminality: validateYesNo(req.body.criminality),
+      illegalEntry: validateYesNo(req.body.illegalEntry),
+      previousBreaches: req.body.previousBreaches !== undefined ? validateBoolean(req.body.previousBreaches) : false,
+      adultDependents: validateNumber(req.body.adultDependents, 0, 20) ?? 0, // 0 to 20
+      childDependents: validateNumber(req.body.childDependents, 0, 20) ?? 0, // 0 to 20
+      contributionScore: req.body.contributionScore !== undefined && req.body.contributionScore !== null 
+        ? validateNumber(req.body.contributionScore, 0, 1000) 
+        : null, // 0 to 1000, allow null
+      residenceScore: req.body.residenceScore !== undefined && req.body.residenceScore !== null 
+        ? validateNumber(req.body.residenceScore, 0, 1000) 
+        : null, // 0 to 1000, allow null
+      integrationScore: req.body.integrationScore !== undefined && req.body.integrationScore !== null 
+        ? validateNumber(req.body.integrationScore, 0, 1000) 
+        : null, // 0 to 1000, allow null
+      characterScore: req.body.characterScore !== undefined && req.body.characterScore !== null 
+        ? validateNumber(req.body.characterScore, 0, 1000) 
+        : null, // 0 to 1000, allow null
+      totalScore: req.body.totalScore !== undefined && req.body.totalScore !== null 
+        ? validateNumber(req.body.totalScore, 0, 10000) 
+        : null, // 0 to 10k, allow null
+      eligibleFor3YearPathway: req.body.eligibleFor3YearPathway !== undefined ? validateBoolean(req.body.eligibleFor3YearPathway) : false,
+      estimatedYearsToILR: validateNumber(req.body.estimatedYearsToILR, 0, 50), // 0 to 50 years
+      newsletter: req.body.newsletter !== undefined ? validateBoolean(req.body.newsletter) : true,
+      volunteeringInterest: req.body.volunteeringInterest !== undefined ? validateBoolean(req.body.volunteeringInterest) : false,
+    };
 
+    // SQL Injection Prevention: Using parameterized queries ($1-$26)
+    // All user input is passed as parameters, never concatenated into SQL strings
     const query = `
       INSERT INTO ilr_submissions (
         full_name, email, phone,
@@ -86,6 +110,10 @@ router.post('/submit', async (req, res) => {
 
     const result = await pool.query(query, values);
 
+    // Rotate CSRF token after successful submission (security best practice)
+    // This invalidates the used token and generates a new one
+    const newCsrfToken = rotateCsrfToken(res, req);
+
     res.status(201).json({
       success: true,
       message: 'ILR submission saved successfully',
@@ -93,13 +121,16 @@ router.post('/submit', async (req, res) => {
         id: result.rows[0].id,
         createdAt: result.rows[0].created_at,
       },
+      // Return new CSRF token so frontend can update its cache
+      csrfToken: newCsrfToken,
     });
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    // Validation errors
+    if (error instanceof Error && (error.message.includes('must be') || error.message.includes('can only') || error.message.includes('Invalid') || error.message.includes('required'))) {
       return res.status(400).json({
         success: false,
         message: 'Validation error',
-        errors: error.errors,
+        error: error.message,
       });
     }
 
@@ -115,10 +146,10 @@ router.post('/submit', async (req, res) => {
 // GET /api/ilr/submissions - Get all submissions (with pagination)
 router.get('/submissions', async (req, res) => {
   try {
-    const page = parseInt(req.query.page as string) || 1;
-    const limit = parseInt(req.query.limit as string) || 10;
-    const offset = (page - 1) * limit;
+    // Validate pagination parameters
+    const { page, limit, offset } = validatePagination(req.query.page, req.query.limit);
 
+    // SQL Injection Prevention: Using parameterized queries for pagination
     const query = `
       SELECT 
         id, full_name, email, phone,
@@ -129,6 +160,7 @@ router.get('/submissions', async (req, res) => {
       LIMIT $1 OFFSET $2
     `;
 
+    // No user input in COUNT query - safe
     const countQuery = 'SELECT COUNT(*) FROM ilr_submissions';
 
     const [results, countResult] = await Promise.all([
@@ -162,8 +194,10 @@ router.get('/submissions', async (req, res) => {
 // GET /api/ilr/submission/:id - Get a specific submission
 router.get('/submission/:id', async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    // Validate ID parameter
+    const id = validateId(req.params.id);
 
+    // SQL Injection Prevention: Using parameterized query for ID
     const query = 'SELECT * FROM ilr_submissions WHERE id = $1';
     const result = await pool.query(query, [id]);
 

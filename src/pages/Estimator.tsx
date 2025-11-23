@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Calculator, Mail, Phone, User, Users, Baby, PoundSterling, Calendar, Heart, Home, BookOpen, Briefcase, AlertTriangle, ShieldAlert } from "lucide-react";
+import { fetchWithCsrf } from "@/utils/csrf";
 
 interface FormData {
   // Main applicant
@@ -42,6 +43,21 @@ interface ScoreResult {
 
 const Estimator = () => {
   const [showResults, setShowResults] = useState(false);
+  const [csrfReady, setCsrfReady] = useState(false);
+
+  // Fetch CSRF token on component mount
+  useEffect(() => {
+    import('@/utils/csrf').then(({ getCsrfToken }) => {
+      getCsrfToken()
+        .then(() => setCsrfReady(true))
+        .catch((error) => {
+          console.error('Failed to fetch CSRF token:', error);
+          // Still allow form submission, backend will handle CSRF error
+          setCsrfReady(true);
+        });
+    });
+  }, []);
+
   const [formData, setFormData] = useState<FormData>({
     mainApplicantSalary: "",
     mainApplicantResidenceYears: "",
@@ -230,21 +246,42 @@ const Estimator = () => {
     };
 
     try {
-      // Submit to backend API
+      // Submit to backend API with CSRF protection
       // In development, use proxy from vite.config.ts, otherwise use env variable or default
       const apiUrl = import.meta.env.PROD 
         ? (import.meta.env.VITE_API_URL || 'http://localhost:3001')
-        : ''; // Empty string uses relative path, which will use Vite proxy in dev
-      const response = await fetch(`${apiUrl}/api/ilr/submit`, {
+        : '/api'; // Use relative path to leverage Vite proxy in dev
+      
+      // Use CSRF-protected fetch
+      const response = await fetchWithCsrf(`${apiUrl}/ilr/submit`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save submission');
+        // Get error details from response
+        let errorMessage = 'Failed to save submission';
+        let errorDetails = null;
+        
+        try {
+          const errorData = await response.clone().json();
+          errorMessage = errorData.message || errorData.error || errorMessage;
+          errorDetails = errorData.details || errorData.errors;
+          
+          // Log detailed error for debugging
+          console.error('Server error response:', {
+            status: response.status,
+            statusText: response.statusText,
+            message: errorMessage,
+            details: errorDetails
+          });
+        } catch (parseError) {
+          const text = await response.text();
+          errorMessage = text || response.statusText || `Server error (${response.status})`;
+          console.error('Error parsing response:', parseError);
+        }
+        
+        throw new Error(errorMessage);
       }
 
       const result = await response.json();
@@ -252,9 +289,21 @@ const Estimator = () => {
       toast.success("Thank you for using MovWise.");
     } catch (error) {
       console.error('Error submitting form:', error);
+      
+      // Show specific error message if available
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      
       // Still show results even if save fails
       setShowResults(true);
-      toast.warning("Results calculated, but failed to save. Results are still displayed.");
+      
+      // Show more specific error message
+      if (errorMessage.includes('CSRF')) {
+        toast.error("Security error: Please refresh the page and try again.");
+      } else if (errorMessage.includes('Rate limit')) {
+        toast.error("Too many requests. Please wait a moment and try again.");
+      } else {
+        toast.warning(`Results calculated, but failed to save: ${errorMessage}`);
+      }
     }
   };
 
@@ -560,7 +609,11 @@ const Estimator = () => {
             </div>
           </Card>
 
-          <Button type="submit" size="lg" className="w-full bg-primary hover:bg-primary/90">
+          <Button 
+            type="submit" 
+            size="lg" 
+            className="w-full bg-primary hover:bg-primary/90"
+          >
             Calculate My ILR Score
           </Button>
         </form>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import { fetchWithCsrf } from "@/utils/csrf";
 import { 
   Home, 
   Mail, 
@@ -30,6 +31,21 @@ import {
 } from "lucide-react";
 
 const Index = () => {
+  const [csrfReady, setCsrfReady] = useState(false);
+
+  // Fetch CSRF token on component mount
+  useEffect(() => {
+    import('@/utils/csrf').then(({ getCsrfToken }) => {
+      getCsrfToken()
+        .then(() => setCsrfReady(true))
+        .catch((error) => {
+          console.error('Failed to fetch CSRF token:', error);
+          // Still allow form submission, backend will handle CSRF error
+          setCsrfReady(true);
+        });
+    });
+  }, []);
+
   const [contactForm, setContactForm] = useState({
     name: "",
     email: "",
@@ -76,17 +92,15 @@ const Index = () => {
     }
 
     try {
-      // Submit to backend API
+      // Submit to backend API with CSRF protection
       // In development, use proxy from vite.config.ts, otherwise use env variable or default
       const apiUrl = import.meta.env.PROD 
         ? (import.meta.env.VITE_API_URL || 'http://localhost:3001')
-        : ''; // Empty string uses relative path, which will use Vite proxy in dev
+        : '/api'; // Use relative path to leverage Vite proxy in dev
       
-      const response = await fetch(`${apiUrl}/api/contact/submit`, {
+      // Use CSRF-protected fetch
+      const response = await fetchWithCsrf(`${apiUrl}/contact/submit`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         body: JSON.stringify({
           name: contactForm.name,
           email: contactForm.email,
@@ -517,7 +531,10 @@ const Index = () => {
                   />
                 </div>
                 
-                <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
+                <Button 
+                  type="submit" 
+                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
+                >
                   Send Message
                 </Button>
               </form>

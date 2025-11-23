@@ -19,16 +19,15 @@ ENV VITE_API_URL=$VITE_API_URL
 # Build the application
 RUN npm run build
 
-# Production stage
-FROM nginx:alpine
+# Production stage - expose built files as volume
+FROM alpine:latest
 
-# Copy built files to nginx
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy built files
+COPY --from=builder /app/dist /dist
 
-# Copy nginx configuration
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Set working directory
+WORKDIR /dist
 
-EXPOSE 80
-
-CMD ["nginx", "-g", "daemon off;"]
+# Keep container running so volume remains accessible
+CMD ["tail", "-f", "/dev/null"]
 

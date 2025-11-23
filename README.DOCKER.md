@@ -27,16 +27,16 @@ This guide explains how to run MovWise using Docker and Docker Compose.
    ```
 
 4. **Access the application**
-   - Frontend: http://localhost:8080
+   - Frontend: Served via external nginx (configured outside Docker)
    - Backend API: http://localhost:3001
    - Database: localhost:5432
 
 ## Services
 
 ### Frontend
-- **Port**: 8080 (configurable via `FRONTEND_PORT`)
-- **URL**: http://localhost:8080
-- Built with Vite and served via Nginx
+- Built with Vite
+- Static files are built and exposed via Docker volume `frontend_dist`
+- Serve the files using your external nginx configuration
 
 ### Backend API
 - **Port**: 3001
@@ -144,9 +144,8 @@ docker-compose up -d postgres
 ## Troubleshooting
 
 ### Port already in use
-If port 8080, 3001, or 5432 is already in use, change them in `.env`:
+If port 3001 or 5432 is already in use, change them in `.env`:
 ```env
-FRONTEND_PORT=8081
 DB_PORT=5433
 ```
 
