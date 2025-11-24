@@ -35,6 +35,8 @@ server/.env.local
 
 # Build outputs
 build
+dist
+server/dist
 *.tsbuildinfo
 
 # OS files
